@@ -1,16 +1,63 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useState } from "react";
+
+import Header from "./components/Header";
+import LabInput from "./components/LabInput";
+import ResultsDisplay from "./components/ResultsDisplay";
+
+import { analyzeLabs } from "./api/labApi";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [analysis, setAnalysis] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const handleAnalyze = async (payload) => {
+    setIsLoading(true);
+
+    try {
+      const response = await analyzeLabs(payload);
+
+      setAnalysis(response);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
-    <div>
-      <p className='font-extrabold text-3xl'>Hello</p>
+    <div className="min-h-screen bg-slate-50">
+      <Header />
+
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+            Analyze Clinical Laboratory Results
+          </h2>
+
+          <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            Submit laboratory values with their reference ranges.
+            Results are classified by severity and explained using AI.
+          </p>
+        </div>
+
+        <LabInput
+          onAnalyze={handleAnalyze}
+          isLoading={isLoading}
+        />
+
+        <ResultsDisplay analysis={analysis} />
+
+        {!analysis && (
+          <p className="mx-auto mt-6 max-w-4xl text-center text-xs leading-5 text-slate-400">
+            This tool is for educational purposes only and does not
+            provide medical diagnosis or replace professional medical
+            advice.
+          </p>
+        )}
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

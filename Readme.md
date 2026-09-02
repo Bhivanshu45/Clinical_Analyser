@@ -2,6 +2,8 @@
 
 A full-stack GenAI application that analyzes laboratory test results, classifies severity, generates AI-powered educational explanations, and presents the results in a clean interface.
 
+Demo Link: https://drive.google.com/file/d/1VVpONBLI6LP_yOaJRsR5a080gX63ON1b/view?usp=sharing
+
 | Service | URL |
 | --- | --- |
 | Live frontend | [clinical-analyser-phi.vercel.app](https://clinical-analyser-phi.vercel.app/) |

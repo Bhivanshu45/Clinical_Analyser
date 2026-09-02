@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.lab_routes import router as lab_router
+from app.api.analysis_routes import router as analysis_router
 
 app = FastAPI(
     title="Clinical Lab Analyser API",
@@ -16,6 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(lab_router)
+app.include_router(analysis_router)
 
 @app.get("/")
 def root():

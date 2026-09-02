@@ -3,23 +3,40 @@ from typing import Optional
 from app.schemas.lab import LabTest, ProcessedLabTest
 
 
+CRITICAL_THRESHOLD = 0.20
+
+
 def get_test_status(
     result: float | str,
     min_reference: Optional[float],
     max_reference: Optional[float],
-    dataset_status: Optional[str] = None,
 ) -> str:
-    if dataset_status:
-        return dataset_status.lower()
-
     if not isinstance(result, (int, float)):
         return "unknown"
 
     if min_reference is not None and result < min_reference:
-        return "low"
+        difference_ratio = (
+            (min_reference - result) / min_reference
+            if min_reference != 0
+            else 0
+        )
+
+        if difference_ratio >= CRITICAL_THRESHOLD:
+            return "critical"
+
+        return "warning"
 
     if max_reference is not None and result > max_reference:
-        return "high"
+        difference_ratio = (
+            (result - max_reference) / max_reference
+            if max_reference != 0
+            else 0
+        )
+
+        if difference_ratio >= CRITICAL_THRESHOLD:
+            return "critical"
+
+        return "warning"
 
     if min_reference is not None or max_reference is not None:
         return "normal"
@@ -32,7 +49,6 @@ def process_lab_test(test: LabTest) -> ProcessedLabTest:
         result=test.result,
         min_reference=test.min_reference,
         max_reference=test.max_reference,
-        dataset_status=test.status,
     )
 
     return ProcessedLabTest(
@@ -43,6 +59,8 @@ def process_lab_test(test: LabTest) -> ProcessedLabTest:
         reference_range=test.reference_range,
         status=status,
         comment=test.comment,
+        min_reference=test.min_reference,
+        max_reference=test.max_reference,
         recommended_followup=test.recommended_followup,
     )
 

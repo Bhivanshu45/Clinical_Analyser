@@ -13,7 +13,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    aallow_origins=[
+    allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://clinical-analyser-phi.vercel.app",
